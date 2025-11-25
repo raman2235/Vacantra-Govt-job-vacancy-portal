@@ -14,6 +14,7 @@ interface JobCardProps {
   category: string;
   vacancies: number;
   isNew?: boolean;
+  applyLink?: string | null;   // 🔥 NEW
 }
 
 const JobCard = ({ 
@@ -25,12 +26,15 @@ const JobCard = ({
   applicationDeadline, 
   category, 
   vacancies,
-  isNew = false 
+  isNew = false,
+  applyLink,              // 🔥 NEW
 }: JobCardProps) => {
   const deadlineDate = new Date(applicationDeadline);
   const today = new Date();
-  const daysLeft = Math.ceil((deadlineDate.getTime() - today.getTime()) / (1000 * 3600 * 24));
-  
+  const daysLeft = Math.ceil(
+    (deadlineDate.getTime() - today.getTime()) / (1000 * 3600 * 24)
+  );
+
   return (
     <Card className="shadow-card hover:shadow-elevated transition-all duration-300 hover:-translate-y-1 bg-gradient-card border-border/50">
       <CardHeader className="pb-3">
@@ -71,13 +75,15 @@ const JobCard = ({
               <span className="font-semibold text-primary ml-1">{vacancies}</span>
             </div>
             
-            <div className={`flex items-center text-xs px-2 py-1 rounded-full ${
-              daysLeft <= 3 
-                ? "bg-destructive/10 text-destructive" 
-                : daysLeft <= 7 
+            <div
+              className={`flex items-center text-xs px-2 py-1 rounded-full ${
+                daysLeft <= 3
+                  ? "bg-destructive/10 text-destructive"
+                  : daysLeft <= 7
                   ? "bg-yellow-500/10 text-yellow-700"
                   : "bg-accent/10 text-accent"
-            }`}>
+              }`}
+            >
               <Clock className="h-3 w-3 mr-1" />
               <span>{daysLeft > 0 ? `${daysLeft} days left` : "Expired"}</span>
             </div>
@@ -87,14 +93,27 @@ const JobCard = ({
 
       <CardFooter className="pt-3">
         <div className="flex gap-2 w-full">
-          <Link to={`/jobs/${id}`} className="flex-1">
-            <Button variant="outline" className="w-full">
-              View Details
+
+          {/* 🔥 Apply Now = open external link in new tab */}
+          {applyLink ? (
+            <a
+              href={applyLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1"
+            >
+              <Button className="w-full bg-gradient-primary hover:bg-primary-hover">
+                Apply Now
+              </Button>
+            </a>
+          ) : (
+            <Button
+              className="flex-1 bg-gradient-primary hover:bg-primary-hover"
+              disabled
+            >
+              Apply Now
             </Button>
-          </Link>
-          <Button className="flex-1 bg-gradient-primary hover:bg-primary-hover">
-            Apply Now
-          </Button>
+          )}
         </div>
       </CardFooter>
     </Card>
