@@ -15,7 +15,10 @@ import adminRoutes from "./routes/adminRoutes";
 
 const app = express();
 app.use(cors({
-  origin: "http://localhost:8080",
+  origin: [
+    "http://localhost:5173",
+    process.env.FRONTEND_URL || ""
+  ],
   credentials: true,
 }));
 
@@ -35,16 +38,7 @@ app.use("/api/alerts", alertRoutes);
 app.use("/api/admin", adminRoutes);   // ⬅️ yeh naya
 
 
-// schedule: every 6 hours at minute 0
-cron.schedule("0 */6 * * *", async () => {
-  console.log("🔁 Cron: running sendAlertsToAllUsers");
-  try {
-    await sendAlertsToAllUsers(null);
-    console.log("🔔 Cron: alerts done");
-  } catch (err) {
-    console.error("Cron alert error:", err);
-  }
-});
+
 
 
 // ✅ Root route
@@ -53,8 +47,10 @@ app.get("/", (req, res) => {
 });
 
 // ✅ Start server
-app.listen(4000, () => {
-  console.log("Server running on http://localhost:4000");
+const PORT = process.env.PORT || 4000;
+
+app.listen(PORT, () => {
+  console.log("Server running on port:", PORT);
 });
 
 // ✅ Scheduled job: auto-fetch new data every 6 hours
