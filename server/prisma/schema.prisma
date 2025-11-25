@@ -2,10 +2,11 @@ generator client {
   provider = "prisma-client-js"
 }
 
-
 datasource db {
-  provider = "postgresql"           // ✅ only provider here, NO url, NO output
+  provider = "postgresql"
 }
+
+
 
 
 // USER TABLE
