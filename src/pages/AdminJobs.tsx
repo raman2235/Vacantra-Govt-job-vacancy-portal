@@ -24,6 +24,9 @@ interface Job {
   qualificationRequired: string | null;
 }
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:4000";
+
 const AdminJobs = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
@@ -45,7 +48,7 @@ const AdminJobs = () => {
       setLoading(true);
       setError("");
 
-      const res = await fetch("http://localhost:4000/api/admin/jobs", {
+      const res = await fetch('${API_BASE_URL}/api/admin/jobs', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -74,7 +77,7 @@ const AdminJobs = () => {
   const handleDelete = async (id: number) => {
     if (!window.confirm("Delete this job?")) return;
     try {
-      const res = await fetch(`http://localhost:4000/api/admin/jobs/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/admin/jobs/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -96,7 +99,7 @@ const AdminJobs = () => {
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:4000/api/admin/jobs", {
+      const res = await fetch('${API_BASE_URL}/api/admin/jobs', {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

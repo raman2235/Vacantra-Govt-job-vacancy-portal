@@ -12,6 +12,9 @@ interface AdminStats {
   totalPreferences: number;
 }
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:4000";
+
 const AdminDashboard = () => {
   const [stats, setStats] = useState<AdminStats>({
     totalUsers: 0,
@@ -29,7 +32,7 @@ const AdminDashboard = () => {
 
       const token = localStorage.getItem("token");
 
-      const res = await fetch("http://localhost:4000/api/admin/stats", {
+      const res = await fetch('${API_BASE_URL}api/admin/stats', {
         headers: {
           Authorization: `Bearer ${token}`,
         },

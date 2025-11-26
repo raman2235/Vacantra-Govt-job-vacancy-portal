@@ -11,6 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+
 interface AdminPreference {
   id: number;
   qualification: string | null;
@@ -26,6 +27,9 @@ interface AdminPreference {
   };
 }
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:4000";
+  
 const AdminPreferences = () => {
   const [prefs, setPrefs] = useState<AdminPreference[]>([]);
   const [loading, setLoading] = useState(true);
@@ -38,7 +42,7 @@ const AdminPreferences = () => {
 
       const token = localStorage.getItem("token");
 
-      const res = await fetch("http://localhost:4000/api/admin/preferences", {
+      const res = await fetch('${API_BASE_URL}/api/admin/preferences', {
         headers: {
           Authorization: `Bearer ${token}`,
         },

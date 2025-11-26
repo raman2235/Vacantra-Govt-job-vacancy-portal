@@ -4,6 +4,9 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Loader2 } from "lucide-react";
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:4000";
+  
 const MatchedJobs = () => {
   const [jobs, setJobs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -15,7 +18,7 @@ const MatchedJobs = () => {
 
       const token = localStorage.getItem("token"); // ⭐ Import token from login
 
-      const res = await fetch("http://localhost:4000/api/jobs/matching", {
+      const res = await fetch('${API_BASE_URL}/api/jobs/matching', {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

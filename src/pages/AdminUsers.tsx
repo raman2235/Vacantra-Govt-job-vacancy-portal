@@ -23,6 +23,9 @@ interface AdminUser {
   createdAt?: string;
 }
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:4000";
+
 const AdminUsers = () => {
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(true);
@@ -39,7 +42,7 @@ const AdminUsers = () => {
         throw new Error("Not authenticated");
       }
 
-      const res = await fetch("http://localhost:4000/api/admin/users", {
+      const res = await fetch('${API_BASE_URL}/api/admin/users', {
         headers: {
           Authorization: `Bearer ${token}`,
         },

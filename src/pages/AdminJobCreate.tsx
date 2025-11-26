@@ -5,6 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:4000";
+  
 const AdminJobCreate = () => {
   const token = localStorage.getItem("token");
   const [job, setJob] = useState({
@@ -22,7 +25,7 @@ const AdminJobCreate = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const res = await fetch("http://localhost:4000/api/admin/jobs", {
+    const res = await fetch('${API_BASE_URL}/api/admin/jobs', {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

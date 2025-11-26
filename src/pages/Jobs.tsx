@@ -8,6 +8,9 @@ import { Search, Filter, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:4000";
+
 const Jobs = () => {
   const [jobs, setJobs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -20,7 +23,7 @@ const Jobs = () => {
   useEffect(() => {
     const loadJobs = async () => {
       try {
-        const res = await fetch("http://localhost:4000/api/jobs/all");
+        const res = await fetch('${API_BASE_URL}/api/jobs/all');
         const data = await res.json();
         if (data.success && data.jobs) {
           // Clean and normalize data before setting state

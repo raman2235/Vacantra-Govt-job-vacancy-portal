@@ -1,12 +1,15 @@
 import { useState, useEffect, useRef } from "react";
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:4000";
+  
 export function useJobAlerts() {
   const [newJobs, setNewJobs] = useState<any[]>([]);
   const lastCount = useRef(0);
 
   async function checkJobs() {
     try {
-      const res = await fetch("http://localhost:4000/api/jobs/matching", {
+      const res = await fetch('${API_BASE_URL}/api/jobs/matching', {
         credentials: "include",
       });
       const data = await res.json();

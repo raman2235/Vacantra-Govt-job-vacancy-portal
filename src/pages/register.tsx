@@ -6,6 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:4000";
+  
 export default function Register() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
@@ -19,7 +22,7 @@ export default function Register() {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:4000/api/auth/register", {
+      const res = await fetch('${API_BASE_URL}/api/auth/register', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

@@ -16,6 +16,9 @@ import { User, Settings, Save } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:4000";
+
 const Profile = () => {
   const [formData, setFormData] = useState({
     fullName: "",
@@ -50,7 +53,7 @@ const Profile = () => {
   useEffect(() => {
     if (!token) return;
 
-    fetch("http://localhost:4000/api/auth/me", {
+    fetch('${API_BASE_URL}/api/auth/me', {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -62,7 +65,7 @@ const Profile = () => {
         }));
       });
 
-    fetch("http://localhost:4000/api/preferences/get", {
+    fetch('${API_BASE_URL}/api/preferences/get', {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -111,7 +114,7 @@ const Profile = () => {
       keywords: formData.keywords,
     };
 
-    const res = await fetch("http://localhost:4000/api/preferences/set", {
+    const res = await fetch("${API_BASE_URL}/api/preferences/set", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
