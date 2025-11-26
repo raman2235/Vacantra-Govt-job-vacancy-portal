@@ -18,12 +18,19 @@ const app = express();
 // ----------------------------------------------------
 const FRONTEND_URL = process.env.FRONTEND_URL || "";
 
+// jo jo origins ko allow karna hai unki list
+const allowedOrigins = [
+  "http://localhost:5173",      // normal Vite dev
+  "http://127.0.0.1:5173",      // kabhi kabhi ye use hota hai
+  "http://172.17.160.1:8080",   // tumhare screenshot wala local preview
+  FRONTEND_URL,                 // deployed frontend (Render etc)
+].filter(Boolean);
+
+console.log("Allowed CORS origins:", allowedOrigins);
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173", // local dev frontend
-      FRONTEND_URL,            // deployed frontend (Render / Vercel)
-    ].filter(Boolean),         // empty strings hata dega
+    origin: allowedOrigins,
     credentials: true,
   })
 );
