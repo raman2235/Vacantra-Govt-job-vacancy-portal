@@ -11,16 +11,22 @@ import alertRoutes from "./routes/alertRoutes";
 import { sendAlertsToAllUsers } from "./controllers/notificationController";
 import adminRoutes from "./routes/adminRoutes";
 
-
-
 const app = express();
-app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    process.env.FRONTEND_URL || ""
-  ],
-  credentials: true,
-}));
+
+// ----------------------------------------------------
+// CORS SETUP
+// ----------------------------------------------------
+const FRONTEND_URL = process.env.FRONTEND_URL || "";
+
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173", // local dev frontend
+      FRONTEND_URL,            // deployed frontend (Render / Vercel)
+    ].filter(Boolean),         // empty strings hata dega
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 
@@ -29,38 +35,41 @@ app.use((req, res, next) => {
   next();
 });
 
-// ✅ Route setup
+// ----------------------------------------------------
+// ROUTES
+// ----------------------------------------------------
 app.use("/api/auth", authRoutes);
 app.use("/api/preferences", preferenceRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/alerts", alertRoutes);
-// ✅ Route setup
-app.use("/api/admin", adminRoutes);   // ⬅️ yeh naya
+app.use("/api/admin", adminRoutes);
 
-
-
-
-
-// ✅ Root route
+// Root route
 app.get("/", (req, res) => {
   res.send("Backend Running ✅");
 });
 
-// ✅ Start server
-const PORT = process.env.PORT || 4000;
+// ----------------------------------------------------
+// SERVER START
+// ----------------------------------------------------
+const PORT = Number(process.env.PORT) || 4000;
 
 app.listen(PORT, () => {
   console.log("Server running on port:", PORT);
 });
 
-// ✅ Scheduled job: auto-fetch new data every 6 hours
+// ----------------------------------------------------
+// CRON JOB – auto fetch new jobs every 6 hours
+// ----------------------------------------------------
+const INTERNAL_BASE_URL =
+  process.env.SERVER_URL || `http://localhost:${PORT}`;
+
 cron.schedule("0 */6 * * *", async () => {
   try {
     console.log("🚀 Scheduled fetch: starting");
-    await fetch(
-      `${process.env.SERVER_URL || "http://localhost:4000"}/api/jobs/fetch`,
-      { method: "POST" }
-    );
+    await fetch(`${INTERNAL_BASE_URL}/api/jobs/fetch`, {
+      method: "POST",
+    });
     console.log("✅ Scheduled fetch: done");
   } catch (err) {
     console.error("Scheduled fetch failed:", err);
