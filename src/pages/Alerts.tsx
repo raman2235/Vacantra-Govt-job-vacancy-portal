@@ -104,7 +104,7 @@ const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
 
   try {
-    const res = await fetch('${API_BASE_URL}/api/alerts/subscribe', {
+    const res = await fetch(`${API_BASE_URL}/api/alerts/subscribe`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

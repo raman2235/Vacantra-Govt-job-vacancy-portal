@@ -18,7 +18,7 @@ const MatchedJobs = () => {
 
       const token = localStorage.getItem("token"); // ⭐ Import token from login
 
-      const res = await fetch('${API_BASE_URL}/api/jobs/matching', {
+      const res = await fetch(`${API_BASE_URL}/api/jobs/matching`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

@@ -1,38 +1,48 @@
 import { useState, useEffect, useRef } from "react";
+import { API_BASE_URL } from "@/lib/api";
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:4000";
-  
 export function useJobAlerts() {
   const [newJobs, setNewJobs] = useState<any[]>([]);
   const lastCount = useRef(0);
 
   async function checkJobs() {
     try {
-      const res = await fetch('${API_BASE_URL}/api/jobs/matching', {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      const res = await fetch(`${API_BASE_URL}/api/alerts/matched`, {
         credentials: "include",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
+
+      if (!res.ok) {
+        console.error("Job alert fetch failed:", res.status);
+        return;
+      }
+
       const data = await res.json();
 
-      if (!data.success) return;
+      const jobs = data.jobs || [];
+      const count = jobs.length;
 
-      const count = data.jobs.length;
-
-      // If NEW jobs appeared → show notification
+      // Notify only if new jobs arrived
       if (count > lastCount.current) {
         const difference = count - lastCount.current;
-        setNewJobs(data.jobs.slice(0, difference));
+        setNewJobs(jobs.slice(0, difference));
       }
 
       lastCount.current = count;
+
     } catch (err) {
       console.log("Job alert error:", err);
     }
   }
 
   useEffect(() => {
-    checkJobs(); // first run
-    const interval = setInterval(checkJobs, 30000); // every 30 sec
+    checkJobs(); // First load
+    const interval = setInterval(checkJobs, 30000); // Check every 30s
     return () => clearInterval(interval);
   }, []);
 

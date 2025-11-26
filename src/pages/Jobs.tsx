@@ -3,7 +3,13 @@ import Footer from "@/components/Footer";
 import JobCard from "@/components/JobCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Search, Filter, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
@@ -23,8 +29,10 @@ const Jobs = () => {
   useEffect(() => {
     const loadJobs = async () => {
       try {
-        const res = await fetch('${API_BASE_URL}/api/jobs/all');
+        const res = await fetch(`${API_BASE_URL}/api/jobs/all`);
+        //            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         const data = await res.json();
+
         if (data.success && data.jobs) {
           // Clean and normalize data before setting state
           const cleanedJobs = data.jobs.map((job: any) => ({
@@ -43,6 +51,7 @@ const Jobs = () => {
         setLoading(false);
       }
     };
+
     loadJobs();
   }, []);
 
@@ -71,9 +80,30 @@ const Jobs = () => {
   };
 
   // Filter options
-  const categories = ["All", "Government", "Railway", "Banking", "Police", "Teaching", "Defense"];
-  const locations = ["All", "Punjab", "Delhi", "Chandigarh", "Mumbai", "Pan India"];
-  const qualifications = ["All", "10th Pass", "12th Pass", "Graduate", "Post Graduate"];
+  const categories = [
+    "All",
+    "Government",
+    "Railway",
+    "Banking",
+    "Police",
+    "Teaching",
+    "Defense",
+  ];
+  const locations = [
+    "All",
+    "Punjab",
+    "Delhi",
+    "Chandigarh",
+    "Mumbai",
+    "Pan India",
+  ];
+  const qualifications = [
+    "All",
+    "10th Pass",
+    "12th Pass",
+    "Graduate",
+    "Post Graduate",
+  ];
 
   // ✅ Filter jobs based on search and dropdowns
   const filteredJobs = jobs.filter((job) => {
@@ -91,9 +121,16 @@ const Jobs = () => {
 
     const matchesQualification =
       selectedQualification === "all" ||
-      job.qualificationRequired?.toLowerCase().includes(selectedQualification.toLowerCase());
+      job.qualificationRequired
+        ?.toLowerCase()
+        .includes(selectedQualification.toLowerCase());
 
-    return matchesSearch && matchesCategory && matchesLocation && matchesQualification;
+    return (
+      matchesSearch &&
+      matchesCategory &&
+      matchesLocation &&
+      matchesQualification
+    );
   });
 
   const clearFilters = () => {
@@ -109,8 +146,12 @@ const Jobs = () => {
 
       <div className="bg-gradient-hero py-12">
         <div className="max-w-7xl mx-auto px-6 text-center">
-          <h1 className="text-4xl font-bold text-white mb-4">Government Job Listings</h1>
-          <p className="text-lg text-gray-100">Find verified live updates from trusted sources</p>
+          <h1 className="text-4xl font-bold text-white mb-4">
+            Government Job Listings
+          </h1>
+          <p className="text-lg text-gray-100">
+            Find verified live updates from trusted sources
+          </p>
         </div>
       </div>
 
@@ -153,7 +194,10 @@ const Jobs = () => {
             </SelectContent>
           </Select>
 
-          <Select value={selectedQualification} onValueChange={setSelectedQualification}>
+          <Select
+            value={selectedQualification}
+            onValueChange={setSelectedQualification}
+          >
             <SelectTrigger className="w-48">
               <SelectValue placeholder="Qualification" />
             </SelectTrigger>
@@ -192,9 +236,8 @@ const Jobs = () => {
                 category={job.category || "General"}
                 vacancies={job.vacancies || 1}
                 isNew={true}
-                applyLink={job.applyLink}    // 🔥 IMPORTANT
-/>
-
+                applyLink={job.applyLink}
+              />
             ))}
           </div>
         ) : (

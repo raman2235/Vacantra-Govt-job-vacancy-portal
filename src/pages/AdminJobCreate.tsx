@@ -25,7 +25,7 @@ const AdminJobCreate = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const res = await fetch('${API_BASE_URL}/api/admin/jobs', {
+    const res = await fetch(`${API_BASE_URL}/api/admin/jobs`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

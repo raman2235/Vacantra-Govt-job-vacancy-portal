@@ -42,7 +42,7 @@ const AdminPreferences = () => {
 
       const token = localStorage.getItem("token");
 
-      const res = await fetch('${API_BASE_URL}/api/admin/preferences', {
+      const res = await fetch(`${API_BASE_URL}/api/admin/preferences`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

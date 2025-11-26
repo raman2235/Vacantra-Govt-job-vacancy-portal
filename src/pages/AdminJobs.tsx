@@ -48,7 +48,7 @@ const AdminJobs = () => {
       setLoading(true);
       setError("");
 
-      const res = await fetch('${API_BASE_URL}/api/admin/jobs', {
+      const res = await fetch(`${API_BASE_URL}/api/admin/jobs`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -99,7 +99,7 @@ const AdminJobs = () => {
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch('${API_BASE_URL}/api/admin/jobs', {
+      const res = await fetch(`${API_BASE_URL}/api/admin/jobs`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

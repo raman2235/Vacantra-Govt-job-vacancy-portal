@@ -42,7 +42,7 @@ const AdminUsers = () => {
         throw new Error("Not authenticated");
       }
 
-      const res = await fetch('${API_BASE_URL}/api/admin/users', {
+      const res = await fetch(`${API_BASE_URL}/api/admin/users`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

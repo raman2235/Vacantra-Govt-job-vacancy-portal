@@ -53,7 +53,7 @@ const Profile = () => {
   useEffect(() => {
     if (!token) return;
 
-    fetch('${API_BASE_URL}/api/auth/me', {
+    fetch(`${API_BASE_URL}/api/auth/me`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -65,7 +65,7 @@ const Profile = () => {
         }));
       });
 
-    fetch('${API_BASE_URL}/api/preferences/get', {
+    fetch(`${API_BASE_URL}/api/preferences/get`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -114,7 +114,7 @@ const Profile = () => {
       keywords: formData.keywords,
     };
 
-    const res = await fetch("${API_BASE_URL}/api/preferences/set", {
+    const res = await fetch(`${API_BASE_URL}/api/preferences/set`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
