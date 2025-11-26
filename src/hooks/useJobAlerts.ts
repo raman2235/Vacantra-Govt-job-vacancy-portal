@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-import { API_BASE_URL } from "@/lib/api";
+
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:4000";
 
 export function useJobAlerts() {
   const [newJobs, setNewJobs] = useState<any[]>([]);
@@ -10,11 +12,14 @@ export function useJobAlerts() {
       const token = localStorage.getItem("token");
       if (!token) return;
 
-      const res = await fetch(`${API_BASE_URL}/api/alerts/matched`, {
+      const url = `${API_BASE_URL}/api/jobs/matching`;
+      console.log("🔔 calling job alerts:", url); // debug ke liye
+
+      const res = await fetch(url, {
         credentials: "include",
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (!res.ok) {
@@ -27,14 +32,13 @@ export function useJobAlerts() {
       const jobs = data.jobs || [];
       const count = jobs.length;
 
-      // Notify only if new jobs arrived
+      // Sirf tab notify karo jab naye jobs aaye
       if (count > lastCount.current) {
         const difference = count - lastCount.current;
         setNewJobs(jobs.slice(0, difference));
       }
 
       lastCount.current = count;
-
     } catch (err) {
       console.log("Job alert error:", err);
     }
@@ -42,7 +46,7 @@ export function useJobAlerts() {
 
   useEffect(() => {
     checkJobs(); // First load
-    const interval = setInterval(checkJobs, 30000); // Check every 30s
+    const interval = setInterval(checkJobs, 30000); // har 30s me check
     return () => clearInterval(interval);
   }, []);
 
