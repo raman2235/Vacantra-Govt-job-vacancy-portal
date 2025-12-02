@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Bell, Search, User, Menu, LogOut, Shield } from "lucide-react";
+import { Bell, Search, User, Menu, LogOut, Shield } from "lucide-react"; // <-- Added Shield
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { useJobAlerts } from "@/hooks/useJobAlerts";
@@ -13,7 +13,7 @@ const Navigation = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [token, setToken] = useState<string | null>(null);
-  const [isAdmin, setIsAdmin] = useState(false); // <--- ADDED STATE: Track admin status
+  const [isAdmin, setIsAdmin] = useState(false); 
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -21,7 +21,7 @@ const Navigation = () => {
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     setToken(storedToken);
-    setIsAdmin(false); // Reset admin status on token change/route change
+    setIsAdmin(false); 
 
     if (storedToken) {
       fetch(`${API_BASE_URL}/api/auth/me`, {
@@ -29,6 +29,12 @@ const Navigation = () => {
       })
         .then((res) => res.json())
         .then((data) => {
+          
+          // 🛑 DEBUGGING STEP ADDED HERE:
+          console.log("API /me response:", data);
+          console.log("Is Admin reported:", data.isAdmin);
+          // 🛑
+
           // Check for the success flag and isAdmin property from the backend
           if (data.success && data.isAdmin) {
             setIsAdmin(data.isAdmin);
@@ -36,7 +42,6 @@ const Navigation = () => {
         })
         .catch((err) => {
           console.error("Error fetching user status:", err);
-          // Can add token cleanup here if fetching fails due to invalid token
         });
     }
   }, [location.pathname]);
@@ -44,7 +49,7 @@ const Navigation = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     setToken(null);
-    setIsAdmin(false); // Reset admin status on logout
+    setIsAdmin(false); 
     toast.success("Logged out successfully!");
     navigate("/");
   };
