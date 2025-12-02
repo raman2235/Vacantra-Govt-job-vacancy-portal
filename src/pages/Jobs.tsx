@@ -237,6 +237,7 @@ const Jobs = () => {
                 vacancies={job.vacancies || 1}
                 isNew={true}
                 applyLink={job.applyLink}
+                syllabus={job.syllabus}
               />
             ))}
           </div>

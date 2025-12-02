@@ -79,7 +79,8 @@ const MatchedJobs = () => {
     applicationDeadline={job.deadline}
     category={job.category}
     vacancies={job.vacancies}
-    applyLink={job.applyLink}      // 🔥 yeh line sabse important hai
+    applyLink={job.applyLink} 
+    syllabus={job.syllabus}     // 🔥 yeh line sabse important hai
   />
 ))}
 

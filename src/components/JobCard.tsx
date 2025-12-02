@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, MapPin, GraduationCap, Clock } from "lucide-react";
+import { Calendar, MapPin, GraduationCap, Clock, BookOpenText } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface JobCardProps {
@@ -14,7 +14,8 @@ interface JobCardProps {
   category: string;
   vacancies: number;
   isNew?: boolean;
-  applyLink?: string | null;   // 🔥 NEW
+  applyLink?: string | null;
+  syllabus?: string | null; // <--- ADDED
 }
 
 const JobCard = ({ 
@@ -27,7 +28,8 @@ const JobCard = ({
   category, 
   vacancies,
   isNew = false,
-  applyLink,              // 🔥 NEW
+  applyLink,
+  syllabus, // <--- ADDED
 }: JobCardProps) => {
   const deadlineDate = new Date(applicationDeadline);
   const today = new Date();
@@ -94,13 +96,31 @@ const JobCard = ({
       <CardFooter className="pt-3">
         <div className="flex gap-2 w-full">
 
-          {/* 🔥 Apply Now = open external link in new tab */}
+          {/* New: View Syllabus button */}
+          {syllabus ? (
+            <a
+              href={syllabus}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`flex-1 ${applyLink ? "" : "w-full"}`} // Full width if no apply link
+            >
+              <Button
+                variant="outline"
+                className="w-full"
+              >
+                <BookOpenText className="h-4 w-4" />
+                View Syllabus
+              </Button>
+            </a>
+          ) : null}
+
+          {/* Apply Now button (adjusted for layout) */}
           {applyLink ? (
             <a
               href={applyLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1"
+              className={`flex-1 ${syllabus ? "" : "w-full"}`} // Full width if no syllabus link
             >
               <Button className="w-full bg-gradient-primary hover:bg-primary-hover">
                 Apply Now
@@ -108,7 +128,7 @@ const JobCard = ({
             </a>
           ) : (
             <Button
-              className="flex-1 bg-gradient-primary hover:bg-primary-hover"
+              className={`flex-1 ${syllabus ? "" : "w-full"}`}
               disabled
             >
               Apply Now
