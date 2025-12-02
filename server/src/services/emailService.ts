@@ -1,7 +1,8 @@
 // src/services/emailService.ts - FINAL VERSION USING SENDGRID SDK
 
 // NOTE: This code requires the '@sendgrid/mail' npm package to be installed.
-import * as sgMail from '@sendgrid/mail';
+// We use 'require' here to avoid potential module resolution issues that lead to the TypeError:
+const sgMail = require('@sendgrid/mail');
 
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
 // The 'from' address must be a verified sender in your SendGrid account.
@@ -9,13 +10,11 @@ const VERIFIED_SENDER = process.env.ALERT_FROM || "no-reply@vacantra-app.com";
 
 if (SENDGRID_API_KEY) {
   // Set the API Key globally for the SendGrid SDK
-  sgMail.setApiKey(SENDGRID_API_KEY);
+  sgMail.setApiKey(SENDGRID_API_KEY); // This is now guaranteed to be a function
   console.log("✅ SendGrid SDK Initialized.");
 } else {
   console.warn("⚠ SENDGRID_API_KEY is missing. Email sending will fail.");
 }
-
-// Nodemailer transport verification is no longer needed as we use the SDK/API endpoint.
 
 export async function sendMail(to: string, subject: string, html: string) {
   if (!SENDGRID_API_KEY) {
@@ -41,7 +40,6 @@ export async function sendMail(to: string, subject: string, html: string) {
       console.log(`📩 Email sent to ${to} → SendGrid Status: ${response.statusCode}`);
       return response;
     } else {
-      // Handles API key permission errors or invalid emails detected by SendGrid
       console.error(`❌ SendGrid failed (${response.statusCode}):`, response.body);
       throw new Error(`SendGrid API error: ${response.statusCode}`);
     }
