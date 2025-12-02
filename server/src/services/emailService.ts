@@ -15,12 +15,11 @@ if (SENDGRID_API_KEY) {
   console.warn("⚠ SENDGRID_API_KEY is missing. Email sending will fail.");
 }
 
-// Nodemailer transport verification is no longer needed as we use the SDK/API endpoint.
+// NOTE: We no longer rely on Nodemailer or its specific connection settings (ports 465/587).
 
 export async function sendMail(to: string, subject: string, html: string) {
   if (!SENDGRID_API_KEY) {
     console.error("❌ SendGrid API key not set. Cannot send email.");
-    // We throw an error to prevent the calling route (trigger-one) from assuming success.
     throw new Error("Email service is unavailable: SendGrid API Key missing.");
   }
   
@@ -34,7 +33,7 @@ export async function sendMail(to: string, subject: string, html: string) {
   };
 
   try {
-    // Send email via SendGrid API
+    // Send email via SendGrid API (over standard HTTPS/443)
     const [response] = await sgMail.send(msg);
 
     // SendGrid API returns status codes 200/202 for success.
@@ -42,7 +41,7 @@ export async function sendMail(to: string, subject: string, html: string) {
       console.log(`📩 Email sent to ${to} → SendGrid Status: ${response.statusCode}`);
       return response;
     } else {
-      // If SendGrid returns a non-200/202 status (e.g., authentication fail), log the details.
+      // Handles API key permission errors or invalid emails detected by SendGrid
       console.error(`❌ SendGrid failed (${response.statusCode}):`, response.body);
       throw new Error(`SendGrid API error: ${response.statusCode}`);
     }

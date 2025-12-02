@@ -1,12 +1,13 @@
 // src/routes/notificationRoutes.ts (or your actual path)
 import { Router, Request, Response } from "express";
+// import nodemailer from "nodemailer"; // <--- REMOVED THIS LINE
 import prisma from "../prisma";
 import authMiddleware from "../middleware/authMiddleware";
 import {
   sendAlertsToAllUsers,
   findMatchedJobsForPref,
 } from "../controllers/notificationController";
-import { sendMail } from "../services/emailService";
+import { sendMail } from "../services/emailService"; // <--- This function uses SendGrid
 
 const router = Router();
 
@@ -19,31 +20,31 @@ interface AuthedRequest extends Request {
 }
 
 /* --------------------------------------------------
-   1️⃣ SUBSCRIBE ROUTE
+   1️⃣ SUBSCRIBE ROUTE (NOW USES CENTRALIZED sendMail)
 -------------------------------------------------- */
 router.post("/subscribe", async (req: Request, res: Response) => {
   const { email, categories, qualifications, locations } = req.body;
 
   try {
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
+    // REPLACED: Manual Nodemailer setup with the centralized sendMail function (SendGrid API)
+    await sendMail(
+      email,
+      "Your Job Alerts Subscription is Active! 🎉",
+      `<h2>Thanks for subscribing to Vacantra Job Alerts!</h2>
+      <p>We'll send you updates based on your preferences:</p>
+      <ul>
+        <li>Categories: ${categories?.join(", ") || 'None'}</li>
+        <li>Qualifications: ${qualifications?.join(", ") || 'None'}</li>
+        <li>Locations: ${locations?.join(", ") || 'None'}</li>
+      </ul>
+      <p>You can manage your preferences on your profile page.</p>`
+    );
 
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: "Your Job Alerts Subscription is Active! 🎉",
-      text: `Thanks for subscribing!\n\nCategories: ${categories?.join(", ")}`,
-    });
-
-    return res.json({ success: true, message: "Email sent" });
+    return res.json({ success: true, message: "Subscription email sent (via SendGrid)" });
   } catch (err) {
-    console.log("EMAIL ERROR:", err);
-    return res.status(500).json({ success: false, message: "Email failed" });
+    // If SendGrid API call fails, the error will be caught here.
+    console.log("SUBSCRIBE EMAIL ERROR:", err);
+    return res.status(500).json({ success: false, message: "Subscription email failed" });
   }
 });
 
@@ -97,7 +98,7 @@ router.get(
 
       const top = matchedJobs.slice(0, 5);
 
-      await sendMail(
+      await sendMail( // <--- This function uses SendGrid successfully
         user.email,
         "Your matched jobs — Vacantra",
         `<h2>Here are your matched jobs</h2>
