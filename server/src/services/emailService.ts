@@ -1,11 +1,11 @@
 // src/services/emailService.ts
 import nodemailer from "nodemailer";
 
-const host = process.env.SMTP_HOST || "smtp.gmail.com";
-const port = Number(process.env.SMTP_PORT || 587);
-
+// Use explicit configuration with secure connection on port 465 for better compatibility
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 465, // <-- Using secure port 465
+  secure: true, // <-- Force TLS/SSL
   auth: {
     user: process.env.EMAIL_USER, // Gmail ID
     pass: process.env.EMAIL_PASS, // App password (NOT Gmail login password)
