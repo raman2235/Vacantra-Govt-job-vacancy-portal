@@ -1,32 +1,37 @@
 // src/services/emailService.ts
+
+// NOTE: Nodemailer natively supports many services like 'SendGrid' 
+// if the corresponding API key is provided via environment variables.
+
 import nodemailer from "nodemailer";
 
-// Use explicit configuration with STARTTLS on port 587 for maximum compatibility 
-// in cloud environments like Render.
+// Using explicit service configuration for SendGrid/Mailgun/etc.
+// For SendGrid, Nodemailer uses 'apikey' as the user and the API key as the password.
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587, // <-- Standard port for STARTTLS
-  secure: false, // <-- Set to false for STARTTLS (port 587)
-  requireTLS: true, // <-- Ensures connection upgrade to TLS
+  host: "smtp.sendgrid.net", // Explicit host for SendGrid
+  port: 587, // Standard port (though it uses API key, this is the official setting)
+  secure: false, 
   auth: {
-    user: process.env.EMAIL_USER, // Gmail ID
-    pass: process.env.EMAIL_PASS, // App password (NOT Gmail login password)
+    user: "apikey", // Standard SendGrid username for API key authentication
+    pass: process.env.SENDGRID_API_KEY, // The new API Key from Render ENV
   },
 });
 
-// Optional: verify SMTP connection
+// Optional: verify SMTP connection (Now connects to SendGrid)
 transporter
   .verify()
   .then(() => {
-    console.log("✅ SMTP transporter verified");
+    console.log("✅ SendGrid transporter verified (via API key).");
   })
   .catch((err) => {
-    console.warn("⚠ SMTP verify failed:", err?.message || err);
+    // If this fails, the SENDGRID_API_KEY is likely incorrect.
+    console.warn("❌ SendGrid verify failed (Check API Key):", err?.message || err);
   });
 
 export async function sendMail(to: string, subject: string, html: string) {
+  // IMPORTANT: The 'from' address must be a verified sender in your SendGrid account.
   const from =
-    process.env.ALERT_FROM || process.env.EMAIL_USER || "no-reply@gmail.com";
+    process.env.ALERT_FROM || "no-reply@vacantra-app.com"; // Change to a domain you control, or your SendGrid verified sender.
 
   try {
     const info = await transporter.sendMail({
