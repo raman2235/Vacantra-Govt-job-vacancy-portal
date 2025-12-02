@@ -1,11 +1,12 @@
-// src/services/emailService.ts - FINAL VERSION USING SENDGRID SDK
+// src/services/emailService.ts - FINAL CODE FIX
 
 // FIX: Using require() instead of import * as sgMail to resolve runtime TypeErrors.
 const sgMail = require('@sendgrid/mail');
 
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
-// IMPORTANT: The 'from' address must be a verified sender in your SendGrid account.
-const VERIFIED_SENDER = process.env.ALERT_FROM || "no-reply@vacantra-app.com"; 
+// The 'from' address must be a verified sender in your SendGrid account.
+// SETTING VERIFIED SENDER TO THE EMAIL ASSOCIATED WITH THE API KEY:
+const VERIFIED_SENDER = process.env.ALERT_FROM || "deepraman2235@gmail.com"; 
 
 if (SENDGRID_API_KEY) {
   // Set the API Key globally for the SendGrid SDK
