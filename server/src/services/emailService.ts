@@ -15,7 +15,7 @@ if (SENDGRID_API_KEY) {
   console.warn("⚠ SENDGRID_API_KEY is missing. Email sending will fail.");
 }
 
-// NOTE: We no longer rely on Nodemailer or its specific connection settings (ports 465/587).
+// Nodemailer transport verification is no longer needed as we use the SDK/API endpoint.
 
 export async function sendMail(to: string, subject: string, html: string) {
   if (!SENDGRID_API_KEY) {
