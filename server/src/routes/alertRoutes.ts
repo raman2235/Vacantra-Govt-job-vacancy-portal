@@ -1,14 +1,16 @@
-// src/routes/notificationRoutes.ts (or your actual path)
+// server/src/routes/alertRoutes.ts (Final Code)
+
 import { Router, Request, Response } from "express";
-// import nodemailer from "nodemailer"; // <--- REMOVED THIS LINE
+// DELETE THIS LINE: import nodemailer from "nodemailer"; 
 import prisma from "../prisma";
 import authMiddleware from "../middleware/authMiddleware";
 import {
   sendAlertsToAllUsers,
   findMatchedJobsForPref,
 } from "../controllers/notificationController";
-import { sendMail } from "../services/emailService"; // <--- This function uses SendGrid
+import { sendMail } from "../services/emailService"; 
 
+// ... (rest of the file remains the same, using sendMail for both routes)
 const router = Router();
 
 // If you extended Request in authMiddleware via declare module,

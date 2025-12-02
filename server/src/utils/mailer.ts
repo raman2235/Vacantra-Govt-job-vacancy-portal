@@ -1,9 +1,8 @@
-// server/src/utils/mailer.ts (Final Fix)
+// server/src/utils/mailer.ts (Final Code)
 
 /*
 This file previously contained the Nodemailer SMTP configuration.
 It is now deprecated to remove the direct dependency on 'nodemailer' and fix the build error.
-
 The project uses the SendGrid SDK via server/src/services/emailService.ts for all email operations.
 */
 
@@ -11,5 +10,5 @@ The project uses the SendGrid SDK via server/src/services/emailService.ts for al
 export const mailer = {};
 
 export const sendMail = async (to: string, subject: string, html: string) => {
-    console.error("The mailer.ts sendMail function is deprecated and non-functional.");
+    console.error("The sendMail function in mailer.ts is deprecated and non-functional.");
 };
