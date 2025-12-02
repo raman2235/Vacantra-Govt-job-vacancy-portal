@@ -42,6 +42,7 @@ export async function sendMail(to: string, subject: string, html: string) {
       console.log(`📩 Email sent to ${to} → SendGrid Status: ${response.statusCode}`);
       return response;
     } else {
+      // If SendGrid returns a non-200/202 status (e.g., authentication fail), log the details.
       console.error(`❌ SendGrid failed (${response.statusCode}):`, response.body);
       throw new Error(`SendGrid API error: ${response.statusCode}`);
     }

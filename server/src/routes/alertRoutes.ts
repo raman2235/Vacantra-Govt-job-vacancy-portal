@@ -1,6 +1,5 @@
 // src/routes/notificationRoutes.ts (or your actual path)
 import { Router, Request, Response } from "express";
-import nodemailer from "nodemailer";
 import prisma from "../prisma";
 import authMiddleware from "../middleware/authMiddleware";
 import {
