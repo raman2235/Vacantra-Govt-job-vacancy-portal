@@ -26,6 +26,7 @@ router.get("/me", authMiddleware, async (req, res) => {
         name: true,
         email: true,
         createdAt: true,
+        isAdmin: true, // <--- ADDED: Include admin status
       },
     });
 
@@ -38,6 +39,7 @@ router.get("/me", authMiddleware, async (req, res) => {
       user,
       email: user.email,
       name: user.name,
+      isAdmin: user.isAdmin, // <--- ADDED: Return admin status
     });
   } catch (err) {
     console.error("GET /api/auth/me error:", err);

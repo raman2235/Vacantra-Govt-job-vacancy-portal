@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Bell, Search, User, Menu, LogOut } from "lucide-react";
+import { Bell, Search, User, Menu, LogOut, Shield } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { useJobAlerts } from "@/hooks/useJobAlerts";
@@ -13,17 +13,38 @@ const Navigation = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [token, setToken] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false); // <--- ADDED STATE: Track admin status
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // --- LOGIC TO CHECK TOKEN AND FETCH USER STATUS
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     setToken(storedToken);
-  }, [location.pathname]); // update navbar when route changes
+    setIsAdmin(false); // Reset admin status on token change/route change
+
+    if (storedToken) {
+      fetch(`${API_BASE_URL}/api/auth/me`, {
+        headers: { Authorization: `Bearer ${storedToken}` },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          // Check for the success flag and isAdmin property from the backend
+          if (data.success && data.isAdmin) {
+            setIsAdmin(data.isAdmin);
+          }
+        })
+        .catch((err) => {
+          console.error("Error fetching user status:", err);
+          // Can add token cleanup here if fetching fails due to invalid token
+        });
+    }
+  }, [location.pathname]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     setToken(null);
+    setIsAdmin(false); // Reset admin status on logout
     toast.success("Logged out successfully!");
     navigate("/");
   };
@@ -83,6 +104,22 @@ const Navigation = () => {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4">
+            
+            {/* --- ADMIN DASHBOARD BUTTON --- */}
+            {isAdmin && (
+              <Link to="/admin">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="flex items-center text-primary hover:bg-primary/10"
+                >
+                  <Shield className="h-4 w-4 mr-2" />
+                  Admin
+                </Button>
+              </Link>
+            )}
+            {/* ----------------------------- */}
+
             <Button
               variant="ghost"
               size="sm"
