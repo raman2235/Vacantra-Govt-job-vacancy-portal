@@ -13,12 +13,6 @@ import adminRoutes from "./routes/adminRoutes";
 
 const app = express();
 
-// --- CRITICAL NODE.JS FIX FOR SMTP/TLS TIMEOUTS IN CLOUD ENVIRONMENTS ---
-// By setting secure: true in Nodemailer, Node.js needs to handle the certificate.
-// Setting this flag prevents potential issues in containerized environments.
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-// --------------------------------------------------------------------------
-
 // ----------------------------------------------------
 // CORS SETUP
 // ----------------------------------------------------
